@@ -1,6 +1,6 @@
 
 # Gestão de Reabastecimento de Tintas de Impressora
-Este projeto foi desenvolvido durante meu estágio na Câmara Bragança Paulista, com o objetivo de gerenciar os tanques de tinta das impressoras de toda a corporação, proporcionando um melhor controle e eficiência.
+Este projeto foi desenvolvido durante meu estágio na Câmara Bragança Paulista, com o objetivo de gerenciar as solicitações de preecdnhimento dos tanques de tinta das impressoras de toda a corporação, proporcionando um melhor controle e eficiência.
 
 ## Funcionalidades
 - Cadastro de Usuários, edição, exclusão e visualização (Tanto com administrador quanto por unidade)
