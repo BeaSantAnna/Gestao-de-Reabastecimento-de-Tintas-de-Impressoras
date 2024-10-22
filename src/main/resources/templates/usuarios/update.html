@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<title>Editar Usuário</title>
+<style>
+@import
+	url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+* {
+	font-family: 'Poppins', sans-serif;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: Arial, sans-serif;
+	margin: 0;
+	padding: 20px;
+}
+
+.container {
+	width: 70%;
+	padding: 40px;
+	margin: 20px auto;
+	border-radius: 15px;
+	border: 1px solid #ccc;
+	background-color: #f9f9f9;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.content .header h1, .titulo {
+	margin-top: 50px;
+	font-weight: 800;
+	font-size: 60px;
+	color: rgb(0, 0, 0);
+	text-align: center;
+}
+
+.btn-voltar {
+	background-color: rgb(0, 0, 0);
+	float: left;
+	position: relative;
+	padding: 10px 40px;
+	text-decoration: none;
+	margin-bottom: 20px;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	position: relative;
+}
+
+.btn-salvar {
+	background-color: #28a745;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 5px;
+	font-size: 16px;
+	cursor: pointer;
+	transition: background-color 0.3s;
+	margin: 5px;
+	margin-left: auto;
+	display: block;
+}
+
+.form {
+	width: 100%;
+	padding: 20px;
+	font-size: 17px;
+	margin: 10px 0;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+
+.form-container {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+}
+
+.error {
+	color: red;
+	font-size: 14px;
+	margin-top: -10px;
+	margin-bottom: 10px;
+}
+
+#unidade-selecao {
+	margin-top: 15px;
+}
+
+.password-container {
+	position: relative;
+}
+
+.password-container input {
+	padding-right: 30px;
+}
+
+.password-container .fa-eye, .password-container .fa-eye-slash {
+	position: absolute;
+	right: 15px;
+	top: 50%;
+	transform: translateY(-50%);
+	cursor: pointer;
+}
+
+.nome {
+	font-size: 17px;
+}
+
+.error {
+	color: red;
+	font-size: 14px;
+	margin-top: -10px;
+	margin-bottom: 10px;
+}
+</style>
+</head>
+<body>
+	<h2 class="titulo">Editar Usuário</h2>
+	<a th:href="@{/administrador/usuarios}" class="btn-voltar"> <i
+		class="fa fa-undo" aria-hidden="true"></i> Voltar para a Lista
+	</a>
+	<form
+		th:action="@{/administrador/usuarios/editar/{id}(id=${usuario.id})}"
+		th:object="${usuario}" method="POST">
+		<div class="container">
+			<label for="username" class="nome">Nome de Usuário:</label> <input
+				type="text" th:field="*{username}" placeholder="Nome de usuário"
+				required class="form" />
+
+			<div th:if="${erro}" class="error">
+				<p th:text="${erro}"></p>
+			</div>
+
+			<label for="newPassword" class="nome">Nova Senha:</label>
+			<div class="password-container">
+				<input type="password" name="newPassword"
+					placeholder="Nova senha (deixe em branco para manter a senha atual)"
+					class="form" id="newPassword" /> <i class="fa fa-eye-slash"
+					id="toggle-password" aria-hidden="true"></i>
+			</div>
+
+			<div>
+				<label for="role" class="nome">Tipo de Usuário:</label> <select
+					th:field="*{role}" id="tipo-usuario" required class="form">
+					<option value="ADMIN" th:selected="${usuario.role == 'ADMIN'}">Admin</option>
+					<option value="UNIDADE" th:selected="${usuario.role == 'UNIDADE'}">Unidade</option>
+				</select>
+			</div>
+
+			<div id="unidade-selecao">
+				<label for="unidade" class="nome">Unidade:</label> <select
+					th:field="*{unidade}" id="unidades-lista" class="form">
+					<option th:each="unidade : ${unidades}" th:value="${unidade.id}"
+						th:text="${unidade.nome}"
+						th:selected="${unidade.id == usuario.unidade?.id}"></option>
+				</select>
+			</div>
+
+			<div class="form-container">
+				<button type="submit" class="btn-salvar">
+					<i class="fa fa-save" aria-hidden="true"></i> Salvar
+				</button>
+			</div>
+		</div>
+	</form>
+
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script>
+		$(document)
+				.ready(
+						function() {
+							function controlarSelecaoUnidade() {
+								var tipo = $('#tipo-usuario').val();
+								if (tipo === 'UNIDADE') {
+									$('#unidade-selecao').show();
+								} else {
+									$('#unidade-selecao').hide();
+								}
+							}
+
+							controlarSelecaoUnidade();
+
+							$('#tipo-usuario').on('change', function() {
+								controlarSelecaoUnidade();
+							});
+
+							$('#toggle-password')
+									.on(
+											'click',
+											function() {
+												var newPasswordField = $('#newPassword');
+												var type = newPasswordField
+														.attr('type') === 'password' ? 'text'
+														: 'password';
+												newPasswordField.attr('type',
+														type);
+												$(this).toggleClass(
+														'fa-eye fa-eye-slash');
+											});
+						});
+	</script>
+</body>
+</html>

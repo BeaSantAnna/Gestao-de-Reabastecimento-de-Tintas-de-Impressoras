@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/style.css">
+<title>Nova solicitação</title>
+</head>
+<body>
+	<h2 class="titulo">Nova solicitação</h2>
+	<a th:href="@{/administrador}" class="btn-voltar"><i
+		class="fa fa-home" aria-hidden="true"></i> Voltar para o início</a>
+	<form th:action="@{/administrador/solicitacoes/salvar}"
+		th:object="${solicitacao}" method="post"
+		onsubmit="return validarFormulario()">
+		<input type="hidden" th:field="*{id}" />
+		<div class="container">
+			<div class="form-group">
+				<label for="unidade">Unidades</label> <select id="unidade"
+					th:field="*{unidade.id}" required>
+					<option value="" disabled selected>Selecione uma unidade</option>
+					<option th:each="unidade : ${unidades}" th:value="${unidade.id}"
+						th:text="${unidade.nome}"></option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="modelo">Modelos</label> <select id="modelo"
+					th:field="*{modelo.id}" required>
+					<option value="" disabled selected>Selecione um modelo</option>
+					<option th:each="modelo : ${modelos}" th:value="${modelo.id}"
+						th:text="${modelo.nome}"></option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label>Tintas</label>
+				<div class="checkbox-container">
+					<div class="checkbox-wrapper">
+						<input type="checkbox" id="preto" th:field="*{tinta}"
+							value="Preto" name="tinta" onclick="manejarTanque()"> <label
+							for="preto">Preto</label>
+					</div>
+					<div class="checkbox-wrapper">
+						<input type="checkbox" id="amarelo" th:field="*{tinta}"
+							value="Amarelo" name="tinta" onclick="manejarTanque()"> <label
+							for="amarelo">Amarelo</label>
+					</div>
+					<div class="checkbox-wrapper">
+						<input type="checkbox" id="magenta" th:field="*{tinta}"
+							value="Magenta" name="tinta" onclick="manejarTanque()"> <label
+							for="magenta">Magenta</label>
+					</div>
+					<div class="checkbox-wrapper">
+						<input type="checkbox" id="ciano" th:field="*{tinta}"
+							value="Ciano" name="tinta" onclick="manejarTanque()"> <label
+							for="ciano">Ciano</label>
+					</div>
+				</div>
+			</div>
+			<div id="tanques" class="tanque-container"></div>
+			<input type="hidden" id="niveis-tinta" name="niveisDeTinta">
+			<div class="form-group">
+				<label for="data">Data</label> <input type="date" id="data"
+					th:field="*{data}" max="" required>
+			</div>
+			<div class="form-group">
+				<label for="status">Status</label> <select name="status"
+					th:field="*{status}" required>
+					<option value="" disabled selected>Selecione um status</option>
+					<option
+						th:each="status : ${T(com.projeto.gerenciamento.enums.Status).values()}"
+						th:value="${status}" th:text="${status.descricao}"
+						th:unless="${status.name() == 'AGUARDANDO_CANCELAMENTO'}">
+					</option>
+				</select>
+			</div>
+			<button type="submit" class="btn-salvar">
+				<i class="fa fa-save" aria-hidden="true"></i> Salvar
+			</button>
+		</div>
+	</form>
+
+	<script>
+        function atualizarTanque(tinta, adicionar) {
+            let tanqueContainer = document.getElementById('tanques');
+            let tanque = document.getElementById(tinta + '-tanque');
+
+            if (adicionar) {
+                if (!tanque) {
+                    tanqueContainer.innerHTML += `
+                        <div class="tanque" id="${tinta}-tanque">
+                            <label class="tanque-label" for="${tinta}-nivel">${tinta}</label>
+                            <div class="tanque-nivel" id="${tinta}-nivel" onclick="mudarNivel('${tinta}')">
+                                <div class="nivel"></div>
+                            </div>
+                        </div>
+                    `;
+                }
+            } else {
+                if (tanque) {
+                    tanqueContainer.removeChild(tanque);
+                }
+            }
+            atualizarCamposOcultos();
+        }
+
+        function manejarTanque() {
+            let tintas = document.querySelectorAll('input[name="tinta"]');
+            tintas.forEach(tinta => {
+                tinta.addEventListener('change', function() {
+                    atualizarTanque(this.value, this.checked);
+                });
+            });
+        }
+
+        function mudarNivel(tinta) {
+            let tanqueNivel = document.getElementById(`${tinta}-nivel`).querySelector('.nivel');
+            let alturaAtual = tanqueNivel.style.height ? parseInt(tanqueNivel.style.height) : 0;
+            let novaAltura = alturaAtual + 25;
+            if (novaAltura > 100) novaAltura = 0; 
+            tanqueNivel.style.height = novaAltura + '%';
+            tanqueNivel.style.backgroundColor = getColor(tinta);
+            atualizarCamposOcultos();
+        }
+
+        function getColor(tinta) {
+            switch(tinta) {
+                case 'Preto': return 'black';
+                case 'Amarelo': return 'yellow';
+                case 'Magenta': return 'magenta';
+                case 'Ciano': return 'cyan';
+                default: return 'white';
+            }
+        }
+
+        function atualizarCamposOcultos() {
+            let niveis = {};
+            document.querySelectorAll('.tanque').forEach(tanque => {
+                let tinta = tanque.id.split('-')[0];
+                let nivel = tanque.querySelector('.nivel').style.height || '0%';
+                niveis[tinta] = parseInt(nivel) || 0;
+            });
+            document.getElementById('niveis-tinta').value = JSON.stringify(niveis);
+        }
+
+        function validarFormulario() {
+            let unidade = document.getElementById('unidade').value;
+            let modelo = document.getElementById('modelo').value;
+            let data = document.getElementById('data').value;
+            let status = document.querySelector('select[name="status"]').value;
+
+            // Verificar se os campos obrigatórios estão preenchidos
+            if (!unidade || !modelo || !data || !status) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return false; // Impede o envio do formulário
+            }
+
+            // Verificar se pelo menos um tanque foi selecionado
+            let tintasSelecionadas = document.querySelectorAll('input[name="tinta"]:checked');
+            if (tintasSelecionadas.length === 0) {
+                alert('Por favor, selecione pelo menos uma tinta.');
+                return false; // Impede o envio do formulário
+            }
+
+            // Verificar se todos os tanques selecionados têm nível maior que 0%
+            let niveis = JSON.parse(document.getElementById('niveis-tinta').value);
+            let todosTanquesValidos = true;
+
+            for (let tinta in niveis) {
+                if (niveis[tinta] <= 0 && tintasSelecionadas.length > 0) {
+                    todosTanquesValidos = false;
+                    break; // Se encontrar um tanque com nível <= 0%, não precisa verificar mais
+                }
+            }
+
+            if (!todosTanquesValidos) {
+                alert('Todos os tanques selecionados devem ter níveis superiores a 0%.');
+                return false; // Impede o envio do formulário
+            }
+
+            return true;
+        }
+
+        window.onload = manejarTanque;
+
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('data').setAttribute('max', today);
+    </script>
+</body>
+</html>

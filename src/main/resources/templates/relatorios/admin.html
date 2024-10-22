@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/style.css">
+<title>Relatórios</title>
+<style>
+@import
+	url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+* {
+	font-family: 'Poppins', sans-serif;
+	top: 0;
+	left: 0;
+	box-sizing: border-box;
+}
+
+.btn-voltar {
+	padding: 5px 10px;
+	background-color: rgb(0, 0, 0);
+	color: #fff;
+	text-decoration: none;
+	margin-bottom: 20px;
+	display: inline-block;
+	border: none;
+	border-radius: 5px;
+}
+
+.form {
+	width: 100%;
+	padding: 20px;
+	border-radius: 15px;
+	border: 1px solid rgb(255, 255, 255);
+	background-color: #f9f9f9;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	margin-bottom: 20px;
+	position: relative;
+}
+
+.btnSearch {
+	padding: 10px 20px;
+	background: #007bff;
+	color: #fff;
+	text-decoration: none;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	width: 100%;
+}
+
+.btnPDF {
+	padding: 10px 20px;
+	background-color: rgb(0, 0, 255);
+	color: #fff;
+	text-decoration: none;
+	border: none;
+	border-radius: 5px;
+	display: inline-block;
+	margin-top: 30px;
+	margin-bottom: 20px;
+}
+
+.btnClear {
+	padding: 10px 20px;
+	background: #dc3545;
+	color: #fff;
+	text-decoration: none;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	width: 10%;
+	float: right;
+	margin-bottom: 20px;
+}
+
+.alert {
+	color: red;
+	font-weight: bold;
+	text-align: center;
+	margin: 20px 0;
+}
+
+.hidden {
+	display: none;
+}
+
+.container {
+	width: 70%;
+	padding: 20px;
+	margin: 20px auto;
+	border-radius: 15px;
+	border: 1px solid #ccc;
+	background-color: #f9f9f9;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.content .header h1, .titulo {
+	margin-top: 50px;
+	font-weight: 800;
+	font-size: 60px;
+	color: rgb(0, 0, 0);
+	text-align: center;
+}
+
+.content .content_blocos {
+	display: flex;
+	width: 100%;
+	justify-content: space-around;
+}
+
+.content .content_blocos .box {
+	background-color: rgb(0, 0, 0);
+	width: 100%;
+	margin: 10px;
+	padding: 20px;
+	color: white;
+	font-weight: 700;
+	text-align: center;
+	font-size: 20px;
+	border-radius: 12px;
+	transition: all 0.5s ease;
+}
+
+.content .content_blocos .box:hover {
+	background-color: #ccc;
+	color: #000000;
+	cursor: pointer;
+}
+
+.table {
+	width: 100%;
+	border-collapse: collapse;
+	text-align: center;
+	margin: 15px 0;
+}
+
+.table thead, .table tbody {
+	background-color: #fff;
+}
+
+.table th, .table td {
+	padding: 10px;
+	border: 1px solid #ddd;
+	vertical-align: middle;
+}
+
+.table th.actions, .table .actions-container {
+	text-align: center;
+	width: 230px;
+}
+
+.table td {
+	vertical-align: middle;
+}
+
+.table .btn, .btn-atualizar {
+	display: inline-block;
+	margin: 4px;
+	padding: 6px 10px;
+	text-decoration: none;
+	color: white;
+	background-color: #007bff;
+	border: none;
+	border-radius: 3px;
+}
+
+.table .btn-editar {
+	background-color: #007bff;
+	float: left;
+}
+
+.table .btn-deletar {
+	background-color: red;
+	float: right;
+}
+
+.icon {
+	width: 16px;
+	height: 16px;
+	margin-right: 8px;
+}
+
+.btn, .btnPDF, .btn-atualizar, .btn-salvar, .btnSearch {
+	position: relative;
+	padding: 5px 20px;
+	color: #fff;
+	text-decoration: none;
+	margin-bottom: 20px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.btn {
+	background: rgb(255, 0, 0);
+	float: right;
+}
+
+.btnSearch {
+	background: rgb(0, 128, 255);
+	float: right;
+}
+
+.btnPDF {
+	background-color: rgb(0, 0, 160);
+	float: right;
+}
+
+.btn-voltar {
+	background-color: rgb(0, 0, 0);
+	float: left;
+	position: relative;
+	padding: 10px 40px;
+	text-decoration: none;
+	margin-bottom: 20px;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	position: relative;
+}
+
+.btn-atualizar {
+	background-color: #007bff;
+	float: right;
+}
+
+.btn-salvar {
+	background-color: rgb(0, 128, 64);
+	float: right;
+}
+
+.form-group {
+	text-align: left;
+	margin-bottom: 40px;
+}
+
+.form-group div {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 8px;
+}
+
+.modelo-label {
+	flex-grow: 1;
+	white-space: nowrap;
+}
+
+.form-group label {
+	font-size: 18px;
+	margin-bottom: 5px;
+	display: block;
+}
+
+.form-group select, .form-group input {
+	font-size: 16px;
+	padding: 10px;
+	margin-top: 5px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	transition: border-color 0.3s;
+}
+
+.form-group select {
+	width: 80%;
+}
+
+.form-group input {
+	width: 80%;
+}
+
+.form-group input:focus, .form-group select:focus {
+	border-color: rgb(0, 0, 160);
+	outline: none;
+}
+
+input[type="checkbox"] {
+	margin-right: 10px;
+}
+
+.checkbox-container {
+	display: flex;
+	flex-direction: column;
+}
+
+.checkbox-wrapper {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+.checkbox-wrapper label {
+	margin-left: 10px;
+	text-align: left;
+}
+
+#tanques {
+	display: flex;
+	justify-content: space-around;
+	margin-top: 20px;
+}
+
+.tanque {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: 5px;
+}
+
+.tanque-label {
+	margin-bottom: 5px;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+.tanque-nivel {
+	width: 60px;
+	height: 120px;
+	border: 1px solid #000;
+	position: relative;
+	display: flex;
+	flex-direction: column-reverse;
+	background-color: #f0f0f0;
+	border-radius: 5px;
+	overflow: hidden;
+}
+
+.nivel {
+	width: 100%;
+	height: 0;
+	transition: height 0.3s ease;
+}
+
+#preto-tanque .nivel {
+	background-color: black;
+}
+
+#amarelo-tanque .nivel {
+	background-color: yellow;
+}
+
+#magenta-tanque .nivel {
+	background-color: magenta;
+}
+
+#ciano-tanque .nivel {
+	background-color: cyan;
+}
+
+.table {
+	margin: 20px 0;
+}
+
+.table th, .table td {
+	padding: 15px;
+}
+
+.table tbody tr:nth-child(odd) {
+	background-color: #f9f9f9;
+}
+
+.search-container {
+	text-align: center;
+	margin: 20px 0;
+}
+
+.search-container input {
+	width: 80%;
+	padding: 10px;
+	font-size: 16px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+.search-container .fa-search {
+	position: relative;
+	left: -30px;
+	top: 50%;
+	transform: translateY(-50%);
+	color: #999;
+}
+
+.search-container {
+	position: relative;
+}
+
+.retangulo {
+	background-color: #f2f2f2;
+	border: 1px solid #ccc;
+	padding: 10px;
+	margin: 5px;
+	border-radius: 5px;
+	display: inline-block;
+}
+
+.contagem-container ul {
+	list-style-type: none;
+	padding: 0;
+}
+
+.contagem-container li {
+	margin-bottom: 10px;
+}
+
+.status-container {
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	width: 100%;
+}
+
+.status-wrapper {
+	display: flex;
+	align-items: center;
+	padding: 10px;
+}
+
+.status-input {
+	display: none; /* Esconde o input radio */
+}
+
+.status-button {
+	background-color: white;
+	border: 2px solid transparent; /* Bordas transparentes por padrão */
+	padding: 10px 20px; /* Padding para criar um botão */
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s, box-shadow 0.3s, border-color 0.3s;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	display: flex;
+	align-items: center;
+}
+
+.status-button.selected {
+	filter: brightness(0.8);
+}
+
+.status-dot {
+	width: 10px; /* Largura da bolinha */
+	height: 10px; /* Altura da bolinha */
+	border-radius: 50%; /* Faz a bolinha ser redonda */
+	margin-right: 8px; /* Espaçamento entre a bolinha e o texto */
+}
+
+.status-bolinha {
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	margin-right: 5px;
+	vertical-align: middle;
+}
+
+.date-group {
+	display: flex;
+	justify-content: center;
+	gap: 100px;
+}
+
+.date-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+	margin-right: 10px;
+}
+
+@media ( max-width : 600px) {
+	.status-checkbox-group {
+		align-items: flex-start;
+	}
+}
+
+.label {
+	font-size: 18px;
+}
+</style>
+</head>
+<body>
+	<a th:href="@{/administrador}" class="btn-voltar"><i
+		class="fa fa-home" aria-hidden="true"></i> Voltar para o início</a>
+
+	<h1 class="titulo">Relatórios</h1>
+
+	<form id="filterForm" th:action="@{/administrador/relatorios/search}"
+		method="get" class="form" onsubmit="return validateForm();">
+		
+		<button type="button" class="btnClear">Limpar</button> 
+
+		<div class="form-group">
+			<label for="unidade">Unidades</label> <select id="unidade"
+				name="unidadeId" class="form-control">
+				<option value="">Todas</option>
+				<option th:each="unidade : ${unidades}" th:value="${unidade.id}"
+					th:text="${unidade.nome}"
+					th:selected="${unidade.id == unidadeSelecionada}"></option>
+			</select>
+		</div>
+
+		<div class="form-group">
+			<label for="modelo">Modelos</label>
+			<div th:each="modelo : ${modelos}">
+				<div>
+					<input type="checkbox" name="modelosSelecionados"
+						th:value="${modelo.id}" class="modelo-checkbox" /> <label
+						class="modelo-label" th:text="${modelo.nome}"></label>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="status">Status</label>
+			<div class="status-container">
+				<div class="status-wrapper"
+					th:each="statusItem : ${T(com.projeto.gerenciamento.enums.Status).values()}">
+					<button type="button" class="status-button"
+						th:data-value="${statusItem.name()}"
+						onclick="toggleStatusSelection(this)">
+						<span class="status-bolinha"
+							th:style="'background-color: ' + ${statusItem.cor}"></span> <span
+							th:text="${statusItem.descricao}"></span>
+					</button>
+				</div>
+			</div>
+			<input type="hidden" name="statusSelecionado" id="statusSelecionado" />
+		</div>
+
+		<div class="form-group date-group">
+			<div class="date-container">
+				<label for="dataInicio">Data inicial</label> <input type="date"
+					id="dataInicio" name="dataInicio" class="form-control"
+					th:value="${param.dataInicio}" onchange="updateMinDate()" />
+			</div>
+			<div class="date-container">
+				<label for="dataFim">Data final</label> <input type="date"
+					id="dataFim" name="dataFim" class="form-control"
+					th:value="${param.dataFim}" />
+			</div>
+		</div>
+
+		<p id="status-error" class="alert hidden">Selecione pelo menos um
+			status.</p>
+		<p id="modelo-error" class="alert hidden">Selecione pelo menos um
+			modelo.</p>
+
+		<button type="submit" class="btnSearch">
+			<i class="fa fa-search"></i> Buscar
+		</button>
+	</form>
+
+	<p th:if="${mensagem}" class="alert" th:text="${mensagem}"></p>
+
+	<a
+		th:href="@{/administrador/relatorios/pdf(unidadeId=${param.unidadeId}, dataInicio=${param.dataInicio}, dataFim=${param.dataFim}, modelosSelecionados=${param.modelosSelecionados}, statusSelecionado=${param.statusSelecionado})}"
+		class="btnPDF"
+		th:if="${param.dataInicio} != null and ${param.dataFim} != null">
+		<i class="fa fa-file-pdf-o" aria-hidden="true"></i> Download PDF
+	</a>
+
+
+	<div class="contagem-container">
+		<ul>
+			<li th:each="entry : ${contagemPorUnidade}">
+				<div class="retangulo">
+					<span th:text="${entry.key} + ': ' + ${entry.value}"></span>
+				</div>
+			</li>
+		</ul>
+	</div>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Unidade</th>
+				<th>Nível de tinta</th>
+				<th>Modelo</th>
+				<th>Tanques</th>
+				<th>Data</th>
+				<th>Status</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="solicitacao : ${solicitacoes}">
+				<td
+					th:text="${solicitacao.unidade != null ? solicitacao.unidade.nome : 'Não informado nessa lista'}"></td>
+				<td th:text="${solicitacao.niveisDeTintaFormatados}"></td>
+				<td
+					th:text="${solicitacao.modelo != null ? solicitacao.modelo.nome : 'Não informado'}"></td>
+				<td>
+					<div id="tanques" class="tanques-container">
+						<div th:each="entry : ${solicitacao.niveisDeTinta.entrySet()}"
+							class="tanque" th:id="${entry.key + '-tanque'}">
+							<label class="tanque-label" th:for="${entry.key + '-nivel'}"
+								th:text="${entry.key}"></label>
+							<div class="tanque-nivel" th:id="${entry.key + '-nivel'}">
+								<div class="nivel"
+									th:style="'height: ' + ${entry.value} + '%; background-color: ' + ${tintaService.getColor(entry.key)}"></div>
+							</div>
+						</div>
+					</div>
+				</td>
+				<td th:text="${solicitacao.formattedData}"></td>
+				<td><span
+					th:class="'status-bolinha' + ' status-' + ${solicitacao.status.cor}"
+					th:style="'background-color: ' + ${solicitacao.status.cor}"></span>
+					<span th:text="${solicitacao.status.descricao}"></span></td>
+			</tr>
+		</tbody>
+	</table>
+
+	<script>
+	document.querySelector(".btnClear").addEventListener("click", function() {
+        document.getElementById("unidade").value = "";
+
+        const modelosCheckboxes = document.querySelectorAll(".modelo-checkbox");
+        modelosCheckboxes.forEach(function(checkbox) {
+            checkbox.checked = false;
+        });
+
+        document.getElementById("statusSelecionado").value = "";
+
+        const statusButtons = document.querySelectorAll(".status-button");
+        statusButtons.forEach(function(button) {
+            button.classList.remove("selected"); 
+        });
+
+        document.getElementById("dataInicio").value = "";
+        document.getElementById("dataFim").value = "";
+
+        document.getElementById("status-error").classList.add("hidden");
+        document.getElementById("modelo-error").classList.add("hidden");
+        
+        const tabelaBody = document.querySelector("tbody"); 
+        if (tabelaBody) {
+            tabelaBody.innerHTML = ""; 
+        }
+
+        const contagemContainer = document.querySelector(".contagem-container ul");
+        if (contagemContainer) {
+            contagemContainer.innerHTML = ""; 
+        }
+    });
+        
+        function updateMinDate() {
+			const dataInicio = document.getElementById('dataInicio').value;
+			const dataFim = document.getElementById('dataFim');
+
+			if (dataInicio) {
+				dataFim.setAttribute('min', dataInicio);
+			} else {
+				dataFim.removeAttribute('min');
+			}
+		} 
+        
+        function toggleStatusSelection(button) {
+            const statusValue = button.getAttribute('data-value');
+            const hiddenInput = document.getElementById('statusSelecionado');
+
+            let selectedStatuses = hiddenInput.value ? hiddenInput.value.split(',') : [];
+
+            if (selectedStatuses.includes(statusValue)) {
+                selectedStatuses = selectedStatuses.filter(status => status !== statusValue);
+                button.classList.remove('selected'); 
+            } else {
+                selectedStatuses.push(statusValue);
+                button.classList.add('selected'); 
+            }
+
+            hiddenInput.value = selectedStatuses.join(',');
+        }
+        
+        function loadFormData() {
+            document.querySelector('#unidade').value = localStorage.getItem('unidadeId') || '';
+            document.querySelector('#dataInicio').value = localStorage.getItem('dataInicio') || '';
+            document.querySelector('#dataFim').value = localStorage.getItem('dataFim') || '';
+
+            const savedStatus = localStorage.getItem('statusSelecionado');
+            if (savedStatus) {
+                const selectedStatuses = savedStatus.split(',');
+                const statusButtons = document.querySelectorAll('.status-button');
+
+                statusButtons.forEach(button => {
+                    const statusValue = button.getAttribute('data-value');
+                    if (selectedStatuses.includes(statusValue)) {
+                        button.classList.add('selected');
+                    }
+                });
+
+                document.getElementById('statusSelecionado').value = savedStatus;
+            }
+        }
+
+        function saveFormData() {
+            sessionStorage.setItem('unidadeId', document.querySelector('#unidade').value);
+            sessionStorage.setItem('dataInicio', document.querySelector('#dataInicio').value);
+            sessionStorage.setItem('dataFim', document.querySelector('#dataFim').value);
+
+            const modelosSelecionados = [];
+            document.querySelectorAll('.modelo-checkbox:checked').forEach(checkbox => {
+                modelosSelecionados.push(checkbox.value);
+            });
+            sessionStorage.setItem('modelos', JSON.stringify(modelosSelecionados));
+
+            sessionStorage.setItem('statusSelecionado', document.getElementById('statusSelecionado').value);
+        }
+
+        function loadFormData() {
+            if (sessionStorage.getItem('unidadeId')) {
+                document.querySelector('#unidade').value = sessionStorage.getItem('unidadeId');
+            }
+            if (sessionStorage.getItem('dataInicio')) {
+                document.querySelector('#dataInicio').value = sessionStorage.getItem('dataInicio');
+            }
+            if (sessionStorage.getItem('dataFim')) {
+                document.querySelector('#dataFim').value = sessionStorage.getItem('dataFim');
+            }
+            if (sessionStorage.getItem('modelos')) {
+                const modelosSelecionados = JSON.parse(sessionStorage.getItem('modelos'));
+                document.querySelectorAll('.modelo-checkbox').forEach(checkbox => {
+                    if (modelosSelecionados.includes(checkbox.value)) {
+                        checkbox.checked = true;
+                    }
+                });
+            }
+            if (sessionStorage.getItem('statusSelecionado')) {
+                const savedStatus = sessionStorage.getItem('statusSelecionado').split(',');
+                const statusButtons = document.querySelectorAll('.status-button');
+
+                statusButtons.forEach(button => {
+                    const statusValue = button.getAttribute('data-value');
+                    if (savedStatus.includes(statusValue)) {
+                        button.classList.add('selected');
+                    }
+                });
+
+                document.getElementById('statusSelecionado').value = savedStatus.join(',');
+            }
+        }
+
+        function clearFormData() {
+            sessionStorage.removeItem('unidadeId');
+            sessionStorage.removeItem('dataInicio');
+            sessionStorage.removeItem('dataFim');
+            sessionStorage.removeItem('modelos');
+            sessionStorage.removeItem('statusSelecionado');
+            sessionStorage.removeItem('impressoraSelecionada');
+
+            document.querySelector('#filterForm').reset();
+        }
+
+        window.onload = loadFormData;
+
+        document.querySelector('#filterForm').onsubmit = saveFormData;
+
+        document.querySelector('#clearButton').onclick = clearFormData;
+
+        function validateForm() {
+            const modelosSelecionados = document.querySelectorAll('.modelo-checkbox:checked').length > 0;
+            const statusSelecionados = document.getElementById('statusSelecionado').value.trim() !== '';
+
+            let isValid = true;
+
+            if (!modelosSelecionados) {
+                document.getElementById('modelo-error').classList.remove('hidden');
+                isValid = false;
+            } else {
+                document.getElementById('modelo-error').classList.add('hidden');
+            }
+
+            if (!statusSelecionados) {
+                document.getElementById('status-error').classList.remove('hidden');
+                isValid = false;
+            } else {
+                document.getElementById('status-error').classList.add('hidden');
+            }
+
+            return isValid;
+        }
+
+        window.onload = loadFormData;
+
+        document.querySelector('#filterForm').onsubmit = saveFormData;
+        
+        window.onload = function() {
+            loadFormData();
+        };
+    </script>
+</body>
+</html>

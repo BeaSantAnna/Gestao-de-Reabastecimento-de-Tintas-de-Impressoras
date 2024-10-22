@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="../css/style.css">
+<title>Confirmar Exclusão</title>
+<style type="text/css">
+@import
+	url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+* {
+	font-family: 'Poppins', sans-serif;
+	top: 0;
+	left: 0;
+	box-sizing: border-box;
+}
+
+.confirmation-container {
+	max-width: 500px;
+	margin: 50px auto;
+	padding: 20px;
+	border-radius: 10px;
+	background-color: #ffffff;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+	text-align: center;
+}
+
+.confirmation-title {
+	font-size: 28px;
+	font-weight: bold;
+	color: rgb(0, 0, 160);
+	margin-bottom: 20px;
+}
+
+.confirmation-message {
+	font-size: 18px;
+	color: #555;
+	margin-bottom: 30px;
+}
+
+.confirmation-buttons {
+	display: flex;
+	justify-content: center;
+}
+
+.confirmation-buttons .btn {
+	padding: 10px 20px;
+	margin: 0 10px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	text-decoration: none;
+}
+
+.confirmation-buttons .btn-confirm {
+	background-color: #dc3545;
+	color: white;
+}
+
+.confirmation-buttons .btn-cancel {
+	background-color: rgb(0, 0, 255);
+	color: white;
+}
+
+.confirmation-buttons .btn:hover {
+	opacity: 0.9;
+}
+</style>
+</head>
+<body>
+	<div class="confirmation-container">
+		<div class="confirmation-title">Confirmação de Exclusão</div>
+		<div class="confirmation-message">
+			Tem certeza que deseja excluir a unidade? <span
+				th:text="${unidade.nome}"></span>
+		</div>
+		<div class="confirmation-buttons">
+			<a
+				th:href="@{/administrador/unidades/deletar/{id}(id=${unidade.id})}"
+				class="btn btn-confirm">Confirmar</a> <a
+				href="/administrador/unidades" class="btn btn-cancel">Cancelar</a>
+		</div>
+	</div>
+
+	<script>
+		document
+				.querySelector('.btn-confirm')
+				.addEventListener(
+						'click',
+						function(event) {
+							if (!confirm('Tem certeza que deseja excluir esta unidade?')) {
+								event.preventDefault(); // Evita a ação padrão do link
+							}
+						});
+	</script>
+</body>
+</html>

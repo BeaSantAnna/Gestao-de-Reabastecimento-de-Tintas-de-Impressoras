@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confirmar Exclusão</title>
+<link rel="stylesheet" href="../css/style.css">
+<style type="text/css">
+@import
+	url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+* {
+	font-family: 'Poppins', sans-serif;
+	box-sizing: border-box;
+}
+
+.confirmation-container {
+	max-width: 500px;
+	margin: 50px auto;
+	padding: 20px;
+	border-radius: 10px;
+	background-color: #ffffff;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+	text-align: center;
+}
+
+.confirmation-title {
+	font-size: 28px;
+	font-weight: bold;
+	color: rgb(0, 0, 160);
+	margin-bottom: 20px;
+}
+
+.confirmation-message {
+	font-size: 18px;
+	color: #555;
+	margin-bottom: 30px;
+}
+
+.confirmation-buttons {
+	display: flex;
+	justify-content: center;
+}
+
+.confirmation-buttons .btn {
+	padding: 10px 20px;
+	margin: 0 10px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	text-decoration: none;
+	color: white;
+}
+
+.confirmation-buttons .btn-confirm {
+	background-color: #dc3545;
+}
+
+.confirmation-buttons .btn-cancel {
+	background-color: #007bff;
+}
+</style>
+</head>
+<body>
+	<div class="confirmation-container">
+		<div class="confirmation-title">Confirmação de Exclusão</div>
+		<div class="confirmation-message">Tem certeza que deseja excluir
+			este usuário?</div>
+		<div class="confirmation-buttons">
+			<a th:href="@{/administrador/usuarios/deletar/{id}(id=${usuario.id})}"
+				class="btn btn-confirm">Confirmar</a> <a href="/usuarios/lista"
+				class="btn btn-cancel">Cancelar</a>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+@import
+	url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+* {
+	font-family: 'Poppins', sans-serif;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	background-color: #f2f2f2;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	margin: 0;
+}
+
+.login-container {
+	background-color: #ffffff;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	width: 200%;
+	max-width: 800px;
+	text-align: center;
+}
+
+h1 {
+	margin-bottom: 40px;
+	font-size: 40px;
+	color: #333;
+}
+
+.alert {
+	color: #d9534f;
+	background-color: #f2dede;
+	border: 1px solid #ebccd1;
+	border-radius: 4px;
+	padding: 10px;
+	margin-bottom: 20px;
+	font-size: 20px;
+	text-align: center;
+}
+
+.alertsucess {
+	color: #3c763d;
+	background-color: #d4edda;
+	border: 1px solid #c3e6cb;
+	border-radius: 4px;
+	padding: 10px;
+	margin-bottom: 20px;
+	font-size: 20px;
+	text-align: center;
+}
+
+input[type="text"], input[type="password"] {
+	width: 100%;
+	padding: 10px;
+	margin: 10px 0;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+	font-size: 20px;
+	position: relative;
+}
+
+.password-container {
+	position: relative;
+}
+
+.password-container input {
+	padding-right: 30px;
+}
+
+.password-container .fa-eye, .password-container .fa-eye-slash {
+	position: absolute;
+	right: 10px;
+	top: 50%;
+	transform: translateY(-50%);
+	cursor: pointer;
+}
+
+input[type="submit"] {
+	background-color: #28a745;
+	color: white;
+	border: none;
+	padding: 10px;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 20px;
+	width: 100%;
+	transition: background-color 0.3s;
+}
+
+input[type="submit"]:hover {
+	background-color: #218838;
+}
+
+.authorship {
+    position: absolute; 
+    right: 20px; 
+    bottom: 20px; 
+    font-size: 16px; 
+    color: #333; 
+}
+
+</style>
+<title>Login</title>
+</head>
+<body>
+	<div class="login-container">
+		<h1>Login</h1>
+		<div th:if="${param.error}" class="alert">Nome de usuário ou
+			senha inválidos.</div>
+		<div th:if="${param.logout}" class="alertsucess">Você saiu com
+			sucesso.</div>
+		<form th:action="@{/login}" method="post">
+			<div>
+				<input type="text" name="username" placeholder="Nome de usuário"
+					required />
+			</div>
+			<div class="password-container">
+				<input type="password" name="password" placeholder="Senha" required
+					id="login-password" /> <i class="fa fa-eye-slash"
+					id="toggle-login-password" aria-hidden="true"></i>
+			</div>
+			<input type="submit" value="Entrar" />
+		</form>
+	</div>
+
+	<div class="authorship">
+		<p>Autoria: Beatriz Sant'Anna - 2024<p>
+		<p>Trabalho de conclusão de curso (TCC)<p>
+	</div>
+
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script>
+		$(document)
+				.ready(
+						function() {
+							$('#toggle-login-password')
+									.on(
+											'click',
+											function() {
+												var passwordField = $('#login-password');
+												var type = passwordField
+														.attr('type') === 'password' ? 'text'
+														: 'password';
+												passwordField
+														.attr('type', type);
+												$(this).toggleClass(
+														'fa-eye fa-eye-slash');
+											});
+						});
+	</script>
+</body>
+</html>

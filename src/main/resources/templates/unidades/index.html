@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/style.css">
+<title>Unidades</title>
+<style>
+.search-container {
+	text-align: center;
+	margin: 10px 0;
+	margin-top: 120px;
+}
+
+.search-container input {
+	width: 80%;
+	padding: 10px;
+	font-size: 16px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+.search-container .fa-search {
+	position: relative;
+	left: -30px;
+	top: 60%;
+	transform: translateY(-50%);
+	color: #999;
+}
+
+.search-container {
+	position: relative;
+}
+
+.table .btn, .btn-atualizar, .btn-deletar {
+	display: inline-block;
+	margin: 4px;
+	padding: 6px 10px;
+	text-decoration: none;
+	color: white;
+	background-color: #007bff;
+	border: none;
+	border-radius: 3px;
+}
+
+.table .btn-deletar {
+	background-color: red;
+	float: right;
+}
+
+.table .btn-deletar disabled {
+	pointer-events: none; 
+	opacity: 0.6;
+}
+</style>
+</head>
+<body>
+	<h2 class="titulo">Lista de Unidades</h2>
+	<a th:href="@{/administrador/unidades/novo}" class="btn-salvar"> <i
+		class="fa fa-plus" aria-hidden="true"></i> Adicionar nova unidade
+	</a>
+	<a th:href="@{/administrador}" class="btn-voltar"> <i
+		class="fa fa-home" aria-hidden="true"></i> Voltar para o início
+	</a>
+
+	<div class="search-container">
+		<i class="fa fa-search"></i> <input type="text" id="searchInput"
+			placeholder="Pesquisar unidades...">
+	</div>
+
+	<table border="1" class="table" id="unidadesTable">
+		<thead>
+			<tr>
+				<th>Nome da Unidade</th>
+				<th class="actions">Ações</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="unidade : ${unidades}">
+				<td th:text="${unidade.nome}">Nome</td>
+
+				<td class="actions-container"><a
+					th:href="@{/administrador/unidades/editar/{id}(id=${unidade.id})}"
+					class="btn btn-editar"> <i class="fa fa-edit"
+						aria-hidden="true"></i> Editar
+				</a> <a th:if="${unidade.solicitacoes.isEmpty()}"
+					th:href="@{/administrador/unidades/confirmarExclusao/{id}(id=${unidade.id})}"
+					class="btn btn-deletar"> <i class="fa fa-trash"
+						aria-hidden="true"></i> Deletar
+				</a> <a th:if="${!unidade.solicitacoes.isEmpty()}"
+					class="btn-deletar" style="cursor: not-allowed;"
+					title="Esta unidade está vinculada a uma solicitação e não pode ser excluída.">
+						<i class="fa fa-trash" aria-hidden="true"></i> Deletar
+				</a></td>
+			</tr>
+			<tr th:if="${#lists.isEmpty(unidades)}">
+				<td colspan="3" style="text-align: center;">Nenhuma unidade
+					cadastrada.</td>
+			</tr>
+		</tbody>
+	</table>
+	<script>
+	document.getElementById('searchInput').addEventListener('keyup', function () {
+        let input = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#unidadesTable tbody tr');
+
+        rows.forEach(row => {
+            let cells = row.getElementsByTagName('td');
+            let found = false;
+
+            for (let cell of cells) {
+                if (cell.textContent.toLowerCase().includes(input)) {
+                    found = true;
+                    break;
+                }
+            }
+
+            row.style.display = found ? '' : 'none';
+        });
+    });
+</script>
+</body>
+</html>

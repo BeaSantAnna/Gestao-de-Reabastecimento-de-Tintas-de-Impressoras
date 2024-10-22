@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/style.css">
+<title>Gestão de reabastecimento</title>
+<style>
+.form-group {
+	display: flex;
+	justify-content: flex-end;
+	margin-bottom: 15px;
+}
+
+.form-group select {
+	width: 20%;
+	font-size: 16px;
+	padding: 10px;
+	margin-top: 10px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	transition: border-color 0.3s;
+	margin-left: 10px;
+}
+</style>
+</head>
+<body>
+	<section class="content">
+		<section id="principal" class="principal" style="height: 100vh;">
+			<div class="header" style="padding-top: 1px;">
+				<br>
+				<h1>Gestão de Reabastecimento de Tintas de Impressoras</h1>
+			</div>
+			<div class="user-info">
+				<a th:text="'Usuário: ' + ${usuarioNome}"></a>
+			</div>
+			<div style="position: absolute; top: 10px; right: 20px;">
+				<a href="/logout" class="btn btn-sair">Sair</a>
+			</div>
+			<section class="content_blocos">
+				<a th:href="@{/administrador/unidades}" class="box"
+					style="text-decoration: none;"> <span>Unidades</span>
+				</a> <a th:href="@{/administrador/modelos}" class="box"
+					style="text-decoration: none;"> <span>Modelos</span>
+				</a><a th:href="@{/administrador/usuarios}" class="box"
+					style="text-decoration: none;"> <span>Usuários</span>
+				</a><a th:href="@{/administrador/solicitacoes}" class="box"
+					style="text-decoration: none;"> <span>Solicitações</span>
+				</a> <a th:href="@{/administrador/relatorios}" class="box"
+					style="text-decoration: none;"> <span>Relatórios</span>
+				</a>
+			</section>
+			<div class="form-group">
+				<select id="statusFilter">
+					<option value="">Filtrar por status</option>
+					<option value="PENDENTE">Pendente</option>
+					<option value="CONCLUIDO">Concluído</option>
+					<option value="CANCELADO">Cancelado</option>
+					<option value="AGUARDANDO_CANCELAMENTO">Aguardando
+						cancelamento</option>
+				</select>
+			</div>
+			<div class="search-container">
+				<i class="fa fa-search"></i> <input type="text" id="searchInput"
+					placeholder="Pesquisar solicitações...">
+			</div>
+			<table border="1" class="table" id="solicitacoesTable">
+				<thead>
+					<tr>
+						<th>Unidade</th>
+						<th>Nível de tinta</th>
+						<th>Modelo</th>
+						<th>Tanques</th>
+						<th>Data</th>
+						<th>Status</th>
+						<th class="actions">Ações</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="solicitacao : ${solicitacoes}">
+						<td
+							th:text="${solicitacao.unidade != null ? solicitacao.unidade.nome : 'Não informado nessa lista'}"></td>
+						<td th:text="${solicitacao.niveisDeTintaFormatados}"></td>
+						<td
+							th:text="${solicitacao.modelo != null ? solicitacao.modelo.nome : 'Não informado'}"></td>
+						<td>
+							<div id="tanques" class="tanques-container">
+								<div th:each="entry : ${solicitacao.niveisDeTinta.entrySet()}"
+									class="tanque" th:id="${entry.key + '-tanque'}">
+									<label class="tanque-label" th:for="${entry.key + '-nivel'}"
+										th:text="${entry.key}"></label>
+									<div class="tanque-nivel" th:id="${entry.key + '-nivel'}">
+										<div class="nivel"
+											th:style="'height: ' + ${entry.value} + '%; background-color: ' + ${tintaService.getColor(entry.key)}"></div>
+									</div>
+								</div>
+							</div>
+						</td>
+						<td th:text="${solicitacao.formattedData}"></td>
+						<td><span
+							th:class="'status-bolinha' + ' status-' + ${solicitacao.status.cor}"
+							th:style="'background-color: ' + ${solicitacao.status.cor}"></span>
+							<span th:text="${solicitacao.status.descricao}"></span></td>
+						<td class="actions-container"><a
+							th:href="@{/administrador/solicitacoes/atualizacao/{id}(id=${solicitacao.id})}"
+							class="btn btn-editar"> <i class="fa fa-edit"
+								aria-hidden="true"></i> Editar
+						</a> <a
+							th:href="@{'/administrador/solicitacoes/deletar/' + ${solicitacao.id}}"
+							class="btn btn-deletar"
+							onclick="return confirm('Tem certeza que deseja excluir esta solicitação?');">
+								<i class="fa fa-trash" aria-hidden="true"></i> Deletar
+						</a></td>
+					</tr>
+					<tr th:if="${#lists.isEmpty(solicitacoes)}">
+						<td colspan="7" style="text-align: center;">Não há
+							solicitações registradas.</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+	</section>
+
+	<script>
+        document.getElementById('searchInput').addEventListener('keyup', function () {
+            let input = this.value.toLowerCase();
+            let rows = document.querySelectorAll('#solicitacoesTable tbody tr');
+
+            rows.forEach(row => {
+                let cells = row.getElementsByTagName('td');
+                let found = false;
+
+                for (let cell of cells) {
+                    if (cell.textContent.toLowerCase().includes(input)) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                row.style.display = found ? '' : 'none';
+            });
+        });
+
+        function confirmDelete(id) {
+            console.log("ID a ser excluído:", id);
+            if (confirm("Tem certeza que deseja excluir esta solicitação?")) {
+                window.location.href = '/solicitacao/delete/' + id;
+            }
+        }
+        
+        document.getElementById('searchInput').addEventListener('keyup', filterTable);
+        document.getElementById('statusFilter').addEventListener('change', filterTable);
+
+        function filterTable() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let status = document.getElementById('statusFilter').value;
+            let rows = document.querySelectorAll('#solicitacoesTable tbody tr');
+            let hasVisibleRows = false;
+            let hasVisibleStatusRows = false;
+
+            rows.forEach(row => {
+                let cells = row.getElementsByTagName('td');
+                let found = false;
+                let statusCell = cells[5].textContent.trim();
+
+                for (let cell of cells) {
+                    if (cell.textContent.toLowerCase().includes(input)) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (status) {
+                    found = found && (statusCell.toUpperCase() === status || 
+                                      (statusCell === "Aguardando Cancelamento" && status === "AGUARDANDO_CANCELAMENTO") || 
+                                      (statusCell === "Concluído" && status === "CONCLUIDO"));
+                }
+
+                row.style.display = found ? '' : 'none';
+                if (found) {
+                    hasVisibleRows = true;
+                    hasVisibleStatusRows = true;
+                }
+            });
+
+            document.querySelector('tr[th\\:if="${#lists.isEmpty(solicitacoes)}"]').style.display = hasVisibleRows ? 'none' : '';
+
+            document.getElementById('noStatusMessage').style.display = hasVisibleRows && !hasVisibleStatusRows ? '' : 'none';
+        }function filterTable() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let status = document.getElementById('statusFilter').value;
+            let rows = document.querySelectorAll('#solicitacoesTable tbody tr');
+            let hasVisibleRows = false;
+            let hasVisibleStatusRows = false;
+
+            rows.forEach(row => {
+                let cells = row.getElementsByTagName('td');
+                let found = false;
+                let statusCell = cells[5].textContent.trim();
+
+                // Verifica se a linha contém o texto pesquisado
+                for (let cell of cells) {
+                    if (cell.textContent.toLowerCase().includes(input)) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                // Adiciona a lógica para verificar o status
+                if (status) {
+                    found = found && (statusCell.toUpperCase() === status || 
+                                      (statusCell === "Aguardando cancelamento" && status === "AGUARDANDO_CANCELAMENTO") || 
+                                      (statusCell === "Concluído" && status === "CONCLUIDO"));
+                }
+
+                row.style.display = found ? '' : 'none';
+                if (found) {
+                    hasVisibleRows = true;
+                    hasVisibleStatusRows = true;
+                }
+            });
+
+            document.querySelector('tr[th\\:if="${#lists.isEmpty(solicitacoes)}"]').style.display = hasVisibleRows ? 'none' : '';
+
+            // Lógica para exibir uma mensagem se não houver linhas visíveis
+            let noStatusMessage = document.getElementById('noStatusMessage');
+            if (noStatusMessage) {
+                noStatusMessage.style.display = hasVisibleRows && !hasVisibleStatusRows ? '' : 'none';
+            }
+        }
+    </script>
+</body>
+</html>

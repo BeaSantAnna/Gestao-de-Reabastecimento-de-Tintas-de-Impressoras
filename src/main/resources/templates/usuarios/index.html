@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/style.css">
+<title>Lista de Usuários</title>
+<style>
+.form-group {
+	display: flex;
+	justify-content: flex-end;
+	margin-bottom: 15px;
+	width: 100%;
+}
+
+.form-group select {
+	width: 200px; 
+	font-size: 16px;
+	padding: 10px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	transition: border-color 0.3s;
+	margin-left: 10px;
+}
+
+</style>
+</head>
+<body>
+	<h2 class="titulo">Lista de Usuários</h2>
+	<a th:href="@{/administrador/usuarios/novo}" class="btn-salvar"> <i
+		class="fa fa-plus" aria-hidden="true"></i> Adicionar novo usuário
+	</a>
+	<a th:href="@{/administrador}" class="btn-voltar"> <i
+		class="fa fa-home" aria-hidden="true"></i> Voltar para o início
+	</a>
+
+	<div class="form-group">
+		<select id="statusFilter">
+			<option value="">Filtrar por tipo</option>
+			<option value="ADMIN">Administrador</option>
+			<option value="UNIDADE">Unidade</option>
+		</select>
+	</div>
+
+	<div class="search-container">
+		<i class="fa fa-search"></i> <input type="text" id="searchInput"
+			placeholder="Pesquisar usuários...">
+	</div>
+
+	<table border="1" class="table" id="usuariosTable">
+		<thead>
+			<tr>
+				<th>Nome de Usuário</th>
+				<th>Tipo</th>
+				<th class="actions">Ações</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="usuario : ${usuarios}">
+				<td th:text="${usuario.username}"></td>
+				<td th:text="${usuario.role}"></td>
+				<td class="actions-container"><a
+					th:href="@{/administrador/usuarios/editar/{id}(id=${usuario.id})}"
+					class="btn btn-editar"> <i class="fa fa-edit"
+						aria-hidden="true"></i> Editar
+				</a> <a
+					th:href="@{/administrador/usuarios/confirmarExclusao/{id}(id=${usuario.id})}"
+					class="btn btn-deletar"> <i class="fa fa-trash"
+						aria-hidden="true"></i> Deletar
+				</a></td>
+			</tr>
+			<tr th:if="${#lists.isEmpty(usuarios)}">
+				<td colspan="3" style="text-align: center;">Nenhum usuário
+					cadastrado.</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<div id="noUsuariosMessage"
+		style="display: none; text-align: center; color: red; margin-top: 20px;">
+		Nenhum usuário encontrado para o filtro selecionado.</div>
+
+	<script>
+        document.getElementById('searchInput').addEventListener('keyup', filterTable);
+        document.getElementById('statusFilter').addEventListener('change', filterTable);
+
+        function filterTable() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let status = document.getElementById('statusFilter').value;
+            let rows = document.querySelectorAll('#usuariosTable tbody tr');
+            let hasVisibleRows = false;
+
+            rows.forEach(row => {
+                let usernameCell = row.getElementsByTagName('td')[0];
+                let roleCell = row.getElementsByTagName('td')[1];
+                let matchesSearch = usernameCell.textContent.toLowerCase().includes(input);
+                let matchesStatus = !status || roleCell.textContent.trim() === status;
+
+                if (matchesSearch && matchesStatus) {
+                    row.style.display = '';
+                    hasVisibleRows = true;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            document.getElementById('noUsuariosMessage').style.display = hasVisibleRows ? 'none' : '';
+        }
+    </script>
+</body>
+</html>

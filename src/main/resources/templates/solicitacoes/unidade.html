@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/style.css">
+<title>Nova solicitação</title>
+</head>
+<body>
+	<h2 class="titulo">Nova solicitação</h2>
+	<a th:href="@{/unidade}" class="btn-voltar"><i class="fa fa-home"
+		aria-hidden="true"></i> Voltar para o início</a>
+
+	<form th:action="@{/unidade/salvar}" th:object="${solicitacao}"
+		method="post">
+		<input type="hidden" th:field="*{id}" />
+		<div class="container">
+			<div class="form-group">
+				<label for="unidade">Unidade</label> <input type="text" id="unidade"
+					th:value="${solicitacao.unidade.nome}" disabled /> <input
+					type="hidden" th:field="*{unidade.id}" />
+			</div>
+
+			<div class="form-group">
+				<label for="modelo">Modelos</label> <select id="modelo"
+					th:field="*{modelo.id}" required>
+					<option value="" disabled selected>Selecione um modelo</option>
+					<option th:each="modelo : ${modelos}" th:value="${modelo.id}"
+						th:text="${modelo.nome}"></option>
+				</select>
+			</div>
+
+
+			<div class="form-group">
+				<label for="data">Data</label> <input type="date" id="data"
+					th:field="*{data}" max="" required>
+			</div>
+
+			<button type="submit" class="btn-salvar">
+				<i class="fa fa-save" aria-hidden="true"></i> Salvar
+			</button>
+		</div>
+	</form>
+
+	<script>
+		function definirDataAtual() {
+			let dataCampo = document.getElementById('data');
+			let hoje = new Date();
+			let dia = String(hoje.getDate()).padStart(2, '0');
+			let mes = String(hoje.getMonth() + 1).padStart(2, '0');
+			let ano = hoje.getFullYear();
+
+			dataCampo.value = ano + '-' + mes + '-' + dia;
+		}
+
+		window.onload = function() {
+			definirDataAtual();
+		}
+
+		// Define a data atual no formato YYYY-MM-DD
+		const today = new Date().toISOString().split('T')[0];
+
+		// Atribui a data atual como valor máximo do input
+		document.getElementById('data').setAttribute('max', today);
+	</script>
+</body>
+</html>

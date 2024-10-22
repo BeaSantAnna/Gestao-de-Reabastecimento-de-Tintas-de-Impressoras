@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/style.css">
+<title>Editar Solicitação</title>
+<style>
+@import
+	url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+* {
+	font-family: 'Poppins', sans-serif;
+	top: 0;
+	left: 0;
+	box-sizing: border-box;
+}
+
+.container {
+	width: 70%;
+	padding: 20px;
+	margin: 20px auto;
+	border-radius: 15px;
+	border: 1px solid #ccc;
+	background-color: #f9f9f9;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.content .header h1, .titulo {
+	font-weight: 700;
+	font-size: 40px;
+	color: rgb(0, 0, 0);
+	text-align: center;
+}
+
+.content .content_blocos {
+	display: flex;
+	width: 100%;
+	justify-content: space-around;
+}
+
+.content .content_blocos .box {
+	background-color: rgb(0, 0, 0);
+	width: 100%;
+	margin: 10px;
+	padding: 20px;
+	color: white;
+	font-weight: 700;
+	text-align: center;
+	font-size: 20px;
+	border-radius: 12px;
+	transition: all 0.5s ease;
+}
+
+.content .content_blocos .box:hover {
+	background-color: #ccc;
+	color: #000000;
+	cursor: pointer;
+}
+
+.table {
+	width: 100%;
+	border-collapse: collapse;
+	text-align: center;
+	margin: 15px 0;
+}
+
+.table thead, .table tbody {
+	background-color: #fff;
+}
+
+.table th, .table td {
+	padding: 10px;
+	border: 1px solid #ddd;
+	vertical-align: middle;
+}
+
+.table th.actions, .table .actions-container {
+	text-align: center;
+	width: 230px;
+}
+
+.table td {
+	vertical-align: middle;
+}
+
+.table .btn, .btn-atualizar {
+	display: inline-block;
+	margin: 4px;
+	padding: 6px 10px;
+	text-decoration: none;
+	color: white;
+	background-color: #007bff;
+	border: none;
+	border-radius: 3px;
+}
+
+.table .btn-editar {
+	background-color: #007bff;
+	float: left;
+}
+
+.table .btn-deletar {
+	background-color: red;
+	float: right;
+}
+
+.icon {
+	width: 16px;
+	height: 16px;
+	margin-right: 8px;
+}
+
+.btn, .btnPDF, .btn-voltar, .btn-atualizar, .btn-salvar, .btnSearch {
+	position: relative;
+	padding: 5px 20px;
+	color: #fff;
+	text-decoration: none;
+	margin-bottom: 20px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.btn {
+	background: rgb(255, 0, 0);
+	float: right;
+}
+
+.btnSearch {
+	background: rgb(0, 128, 255);
+	float: right;
+}
+
+.btnPDF {
+	background-color: rgb(0, 0, 160);
+	float: right;
+}
+
+.btn-voltar {
+	background-color: rgb(0, 0, 0);
+	float: left;
+	padding: 5px 10px;
+}
+
+.btn-atualizar {
+	background-color: #007bff;
+	float: right;
+}
+
+.btn-salvar {
+	background-color: rgb(0, 128, 64);
+	float: right;
+}
+
+.form {
+	width: 70%;
+	padding: 50px;
+	margin: 0 auto;
+	background-color: white;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+	text-align: left;
+	margin-bottom: 20px;
+}
+
+.form-group label {
+	font-size: 18px;
+	margin-bottom: 5px;
+	display: block;
+}
+
+.form-group select, .form-group input {
+	font-size: 16px;
+	padding: 10px;
+	margin-top: 5px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	transition: border-color 0.3s;
+}
+
+.form-group select {
+	width: 80%;
+}
+
+.form-group input {
+	width: 13%;
+}
+
+.form-group input:focus, .form-group select:focus {
+	border-color: rgb(0, 0, 160);
+	outline: none;
+}
+
+input[type="checkbox"] {
+	margin-right: 10px;
+}
+
+.checkbox-container {
+	display: flex;
+	flex-direction: column;
+}
+
+.checkbox-wrapper {
+	display: flex;
+	align-items: center;
+	margin-bottom: 5px;
+}
+
+#tanques {
+	display: flex;
+	justify-content: space-around;
+	margin-top: 20px;
+}
+
+.tanque {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: 5px;
+}
+
+.tanque-label {
+	margin-bottom: 5px;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+.tanque-nivel {
+	width: 60px;
+	height: 120px;
+	border: 1px solid #000;
+	position: relative;
+	display: flex;
+	flex-direction: column-reverse;
+	background-color: #f0f0f0;
+	border-radius: 5px;
+	overflow: hidden;
+}
+
+.nivel {
+	width: 100%;
+	height: 0;
+	transition: height 0.3s ease;
+}
+
+#preto-tanque .nivel {
+	background-color: black;
+}
+
+#amarelo-tanque .nivel {
+	background-color: yellow;
+}
+
+#magenta-tanque .nivel {
+	background-color: magenta;
+}
+
+#ciano-tanque .nivel {
+	background-color: cyan;
+}
+
+.table {
+	margin: 20px 0;
+}
+
+.table th, .table td {
+	padding: 15px;
+}
+
+.table tbody tr:nth-child(odd) {
+	background-color: #f9f9f9;
+}
+
+.search-container {
+	text-align: center;
+	margin: 20px 0;
+}
+
+.search-container input {
+	width: 80%;
+	padding: 10px;
+	font-size: 16px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+.search-container .fa-search {
+	position: relative;
+	left: -30px;
+	top: 50%;
+	transform: translateY(-50%);
+	color: #999;
+}
+
+.search-container {
+	position: relative;
+}
+
+.status-bolinha {
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	margin-right: 5px;
+}
+
+.user-info {
+	background-color: #007bff;
+	color: white;
+	padding: 10px 15px;
+	border-radius: 5px;
+	font-size: 16px;
+	font-weight: bold;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+	display: inline-block;
+}
+</style>
+</head>
+<body>
+	<h2 class="titulo">Editar Solicitação</h2>
+	<a th:href="@{/administrador}" class="btn-voltar"><i
+		class="fa fa-home" aria-hidden="true"></i> Voltar para o início</a>
+
+	<form th:action="@{/administrador/solicitacoes/atualizar}"
+		th:object="${solicitacao}" method="post" class="form"
+		onsubmit="return validarTanques()">
+		<input type="hidden" th:field="*{id}" />
+
+		<div class="form-group">
+			<label for="unidade">Unidades</label> <select id="unidade"
+				th:field="*{unidade.id}">
+				<option th:each="unidade : ${unidades}" th:value="${unidade.id}"
+					th:text="${unidade.nome}"></option>
+			</select>
+		</div>
+
+		<div class="form-group">
+			<label for="modelo">Modelos</label> <select id="modelo"
+				th:field="*{modelo.id}">
+				<option th:each="modelo : ${modelos}" th:value="${modelo.id}"
+					th:text="${modelo.nome}"></option>
+			</select>
+		</div>
+
+
+		<div class="form-group">
+			<label>Tintas</label>
+			<div class="checkbox-container">
+				<div class="checkbox-wrapper">
+					<input type="checkbox" id="preto" value="Preto"
+						th:checked="${solicitacao.niveisDeTinta.containsKey('Preto')}"
+						onchange="atualizarTanque('Preto', this.checked)"
+						onclick="manejarTanque()"> <label for="preto">Preto</label>
+				</div>
+				<div class="checkbox-wrapper">
+					<input type="checkbox" id="amarelo" value="Amarelo"
+						th:checked="${solicitacao.niveisDeTinta.containsKey('Amarelo')}"
+						onchange="atualizarTanque('Amarelo', this.checked)"
+						onclick="manejarTanque()"> <label for="amarelo">Amarelo</label>
+				</div>
+				<div class="checkbox-wrapper">
+					<input type="checkbox" id="magenta" value="Magenta"
+						th:checked="${solicitacao.niveisDeTinta.containsKey('Magenta')}"
+						onchange="atualizarTanque('Magenta', this.checked)"
+						onclick="manejarTanque()"> <label for="magenta">Magenta</label>
+				</div>
+				<div class="checkbox-wrapper">
+					<input type="checkbox" id="ciano" value="Ciano"
+						th:checked="${solicitacao.niveisDeTinta.containsKey('Ciano')}"
+						onchange="atualizarTanque('Ciano', this.checked)"
+						onclick="manejarTanque()"> <label for="ciano">Ciano</label>
+				</div>
+			</div>
+		</div>
+
+		<div id="tanques" class="tanques-container">
+			<div th:each="entry : ${solicitacao.niveisDeTinta.entrySet()}"
+				class="tanque" th:id="${entry.key + '-tanque'}">
+				<label class="tanque-label" th:for="${entry.key + '-nivel'}"
+					th:text="${entry.key}"></label>
+				<div class="tanque-nivel" th:id="${entry.key + '-nivel'}"
+					onclick="mudarNivel('${entry.key}')">
+					<div class="nivel"
+						th:style="'height: ' + ${entry.value} + '%; background-color: ' + ${tintaService.getColor(entry.key)}"></div>
+				</div>
+			</div>
+		</div>
+
+		<input type="hidden" id="niveis-tinta" name="niveisDeTinta"
+			th:value="${solicitacao.niveisDeTinta != null ? solicitacao.niveisDeTinta : '{}'}" />
+
+		<div class="form-group">
+			<label for="data">Data</label> <input type="date" id="data"
+				name="data" th:value="${solicitacao.formattedDataForInput}" />
+		</div>
+
+		<div class="form-group">
+			<label for="status">Status</label> <select id="status"
+				th:field="*{status}">
+				<option th:each="status : ${statusOptions}" th:value="${status}"
+					th:text="${status.descricao}"></option>
+			</select>
+		</div>
+
+		<button type="submit" class="btn-salvar">
+			<i class="fa fa-save" aria-hidden="true"></i> Salvar
+		</button>
+	</form>
+
+	<script>
+	function mudarNivel(tinta) {
+	    let tanqueNivel = document.getElementById(`${tinta}-nivel`).querySelector('.nivel');
+	    let alturaAtual = tanqueNivel.style.height ? parseInt(tanqueNivel.style.height) : 0;
+	    let novaAltura = alturaAtual + 25;
+	    if (novaAltura > 100) novaAltura = 0; 
+	    tanqueNivel.style.height = novaAltura + '%';
+	    tanqueNivel.style.backgroundColor = getColor(tinta);
+	    atualizarCamposOcultos();
+	}
+	
+	 function atualizarTanque(tinta, adicionar) {
+         let tanqueContainer = document.getElementById('tanques');
+         let tanque = document.getElementById(tinta + '-tanque');
+
+         if (adicionar) {
+             if (!tanque) {
+                 tanqueContainer.innerHTML += `
+                     <div class="tanque" id="${tinta}-tanque">
+                         <label class="tanque-label" for="${tinta}-nivel">${tinta}</label>
+                         <div class="tanque-nivel" id="${tinta}-nivel" onclick="mudarNivel('${tinta}')">
+                             <div class="nivel"></div>
+                         </div>
+                     </div>
+                 `;
+             }
+         } else {
+             if (tanque) {
+                 tanqueContainer.removeChild(tanque);
+             }
+         }
+         atualizarCamposOcultos();
+     }
+
+     function manejarTanque() {
+         let tintas = document.querySelectorAll('input[name="tinta"]');
+         tintas.forEach(tinta => {
+             tinta.addEventListener('change', function() {
+                 atualizarTanque(this.value, this.checked);
+             });
+         });
+     }
+
+     function getColor(tinta) {
+         switch(tinta) {
+             case 'Preto': return 'black';
+             case 'Amarelo': return 'yellow';
+             case 'Magenta': return 'magenta';
+             case 'Ciano': return 'cyan';
+             default: return 'white';
+         }
+     }
+
+     function atualizarCamposOcultos() {
+    	    let niveis = {};
+    	    document.querySelectorAll('.tanque').forEach(tanque => {
+    	        let tinta = tanque.id.split('-')[0];
+    	        let nivel = tanque.querySelector('.nivel').style.height || '0%';
+    	        niveis[tinta] = parseInt(nivel) || 0;
+    	    });
+    	    document.getElementById('niveis-tinta').value = JSON.stringify(niveis); 
+    	}
+     
+     window.onload = function() {
+         manejarTanque();
+   
+         const niveisDeTinta = /*[[${solicitacao.niveisDeTinta}]]*/ '{}';
+         const niveis = JSON.parse(niveisDeTinta);
+         for (const tinta in niveis) {
+             if (niveis[tinta] > 0) {
+                 const checkbox = document.querySelector(`input[value="${tinta}"]`);
+                 if (checkbox) {
+                     checkbox.checked = true;
+                     atualizarTanque(tinta, true);
+                     const tanqueNivel = document.getElementById(`${tinta}-nivel`).querySelector('.nivel');
+                     tanqueNivel.style.height = niveis[tinta] + '%';
+                     tanqueNivel.style.backgroundColor = getColor(tinta);
+                 }
+             }
+         }
+         atualizarCamposOcultos();
+     };
+     
+     function validarTanques() {
+         let checkboxes = document.querySelectorAll('input[type="checkbox"]');
+         let niveisDeTintaValidos = true;
+
+         checkboxes.forEach(checkbox => {
+             if (checkbox.checked) {
+                 let tinta = checkbox.value;
+                 let nivelTanque = document.getElementById(`${tinta}-nivel`).querySelector('.nivel');
+                 let altura = parseInt(nivelTanque.style.height) || 0;
+
+                 if (altura === 0) {
+                     alert(`Todos os tanques selecionados devem ter níveis superiores a 0%.`); 
+                     niveisDeTintaValidos = false;
+                     return false; 
+                 }
+             }
+         });
+
+         return niveisDeTintaValidos; 
+     }
+
+    </script>
+</body>
+</html>

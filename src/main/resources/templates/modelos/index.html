@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/style.css">
+<title>Modelos</title>
+<style>
+.search-container {
+	text-align: center;
+	margin: 10px 0;
+	margin-top: 120px;
+}
+
+.search-container input {
+	width: 80%;
+	padding: 10px;
+	font-size: 16px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+.search-container .fa-search {
+	position: relative;
+	left: -30px;
+	top: 60%;
+	transform: translateY(-50%);
+	color: #999;
+}
+
+.search-container {
+	position: relative;
+}
+
+.table .btn, .btn-atualizar, .btn-deletar {
+	display: inline-block;
+	margin: 4px;
+	padding: 6px 10px;
+	text-decoration: none;
+	color: white;
+	background-color: #007bff;
+	border: none;
+	border-radius: 3px;
+}
+
+.table .btn-deletar {
+	background-color: red;
+	float: right;
+}
+
+.table .btn-deletar disabled {
+	pointer-events: none; 
+	opacity: 0.6;
+}
+</style>
+</head>
+<body>
+	<h2 class="titulo">Lista de Modelos</h2>
+	<a th:href="@{/administrador/modelos/novo}" class="btn-salvar"> <i
+		class="fa fa-plus" aria-hidden="true"></i> Adicionar novo modelo
+	</a>
+	<a th:href="@{/administrador}" class="btn-voltar"> <i
+		class="fa fa-home" aria-hidden="true"></i> Voltar para o início
+	</a>
+
+	<div class="search-container">
+		<i class="fa fa-search"></i> <input type="text" id="searchInput"
+			placeholder="Pesquisar modelos...">
+	</div>
+
+	<table border="1" class="table" id="unidadesTable">
+		<thead>
+			<tr>
+				<th>Nome do Modelo</th>
+				<th class="actions">Ações</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="modelo : ${modelos}">
+				<td th:text="${modelo.nome}">Nome</td>
+				<td class="actions-container"><a
+					th:href="@{/administrador/modelos/editar/{id}(id=${modelo.id})}"
+					class="btn btn-editar"> <i class="fa fa-edit"
+						aria-hidden="true"></i> Editar
+				</a> <a th:if="${modelo.solicitacoes.isEmpty()}"
+					th:href="@{/administrador/modelos/confirmarExclusao/{id}(id=${modelo.id})}"
+					class="btn btn-deletar"> <i class="fa fa-trash"
+						aria-hidden="true"></i> Deletar
+				</a> <a th:if="${!modelo.solicitacoes.isEmpty()}"
+					class="btn-deletar"
+					title="Não pode ser excluído porque está vinculado a uma solicitação."
+					style="cursor: not-allowed;"> <i
+						class="fa fa-trash" aria-hidden="true"></i> Deletar
+				</a></td>
+			</tr>
+			<tr th:if="${#lists.isEmpty(modelos)}">
+				<td colspan="2" style="text-align: center;">Nenhum modelo
+					cadastrado.</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<script>
+        document.getElementById('searchInput').addEventListener('keyup', function () {
+            let input = this.value.toLowerCase();
+            let rows = document.querySelectorAll('#unidadesTable tbody tr');
+
+            rows.forEach(row => {
+                let cells = row.getElementsByTagName('td');
+                let found = false;
+
+                for (let cell of cells) {
+                    if (cell.textContent.toLowerCase().includes(input)) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                row.style.display = found ? '' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>
