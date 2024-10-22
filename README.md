@@ -26,12 +26,13 @@ Este projeto foi desenvolvido durante meu estágio na Câmara Bragança Paulista
    git clone https://github.com/seu-usuario/Gerenciamento-de-Tintas-de-Impressora.git](https://github.com/BeaSantAnna/Gestao-de-Reabastecimento-de-Tintas-de-Impressoras.git)
 
 2. Altere o propriets:
-   ```bash
-   # Banco de dados
+# Banco de dados
 spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
 spring.datasource.url=jdbc:mysql://localhost:3306/gerenciamento
-spring.datasource.username=root 
-spring.datasource.password=root
+spring.datasource.username=root //o seu user
+spring.datasource.password=root // sua senha
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 spring.jpa.hibernate.ddl-auto=update
+
+![image](https://github.com/user-attachments/assets/378db919-95b3-464e-959e-aa92c5203824)
