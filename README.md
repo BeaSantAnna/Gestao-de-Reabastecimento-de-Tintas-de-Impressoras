@@ -34,7 +34,7 @@ spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 spring.jpa.hibernate.ddl-auto=update
 
-##Tela de Login:
+## Tela de Login:
 
 Usuário padrão: Admin
 Senha: admin123
@@ -43,13 +43,13 @@ Senha: admin123
 ![image](https://github.com/user-attachments/assets/e3dbd622-65a5-4e1d-8ae3-820f7535be53)
 
 
-##Tela principal (Administrador):
+## Tela principal (Administrador):
 
 
 ![image](https://github.com/user-attachments/assets/378db919-95b3-464e-959e-aa92c5203824)
 
 
-##Tela de acesso das unidades:
+## Tela de acesso das unidades:
 
 
 ![image](https://github.com/user-attachments/assets/d296fd3d-577f-4da5-8aa0-c0efedcf1fce)
