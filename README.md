@@ -25,14 +25,6 @@ Este projeto foi desenvolvido durante meu estágio na Câmara Bragança Paulista
    ```bash
    git clone https://github.com/seu-usuario/Gerenciamento-de-Tintas-de-Impressora.git](https://github.com/BeaSantAnna/Gestao-de-Reabastecimento-de-Tintas-de-Impressoras.git)
 
-2. Altere o propriets:
-spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
-spring.datasource.url=jdbc:mysql://localhost:3306/gerenciamento
-spring.datasource.username=root //o seu user
-spring.datasource.password=root // sua senha
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
-spring.jpa.hibernate.ddl-auto=update
 
 ## Tela de Login:
 
@@ -54,7 +46,7 @@ Senha: admin123
 
 ![image](https://github.com/user-attachments/assets/d296fd3d-577f-4da5-8aa0-c0efedcf1fce)
 
-Autor: 
+## Autoria: 
 Beatriz Sant'Anna
 [Linkedin](https://www.linkedin.com/in/bea-sant-anna/)
 
