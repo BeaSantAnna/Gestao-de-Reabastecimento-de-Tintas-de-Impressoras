@@ -1,8 +1,8 @@
 
-# Gestão de Reabastecimento de Tintas de Impressora
+# Gestão de Reabastecimento de Tintas de Impressora 🚀
 Este projeto foi desenvolvido durante meu estágio na Câmara Bragança Paulista, com o objetivo de gerenciar as solicitações de preecdnhimento dos tanques de tinta das impressoras de toda a corporação, proporcionando um melhor controle e eficiência.
 
-## Funcionalidades
+## Funcionalidades ✨
 - Cadastro de Usuários, edição, exclusão e visualização (Tanto com administrador quanto por unidade)
 - Cadastro de Modelos, edição e exclusão e visualização (Impressoras)
 - Cadastro de Unidades, edição, exclusão e visualização (departamentos dentro de uma empresa)
@@ -10,7 +10,7 @@ Este projeto foi desenvolvido durante meu estágio na Câmara Bragança Paulista
 - Emitir relatórios com base em datas (inicial e final), unidades, modelos e status
 - Gerar relatórios em PDF
   
-## Tecnologias Utilizadas
+## Tecnologias Utilizadas 🔥
 
 - **Linguagem:** Java.
 - **Framework:** Spring Framework.
@@ -19,11 +19,11 @@ Este projeto foi desenvolvido durante meu estágio na Câmara Bragança Paulista
 - **Banco de dados:** MySQL.
 - **Bibliotecas de Ícones:** Font Awesome.
 
-## Como Usar
+## Como Usar 😊
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/seu-usuario/Gerenciamento-de-Tintas-de-Impressora.git](https://github.com/BeaSantAnna/Gestao-de-Reabastecimento-de-Tintas-de-Impressoras.git)
+   git clone https://github.com/seu-usuario/Gerenciamento-de-Tintas-de-Impressora.git
 
 
 ## Tela de Login:
@@ -48,5 +48,6 @@ Senha: admin123
 
 ## Autoria: 
 Beatriz Sant'Anna
+
 [Linkedin](https://www.linkedin.com/in/bea-sant-anna/)
 
